@@ -6,6 +6,57 @@ using System.Threading.Tasks;
 
 namespace Lab7
 {
+    class Dialog
+    {
+        public static void PrintMenu1stLevel()
+        {
+            Console.WriteLine("1. Однонаправленный список");
+            Console.WriteLine("2. Двунаправленный список");
+            Console.WriteLine("3. Бинарное дерево");
+            Console.WriteLine("4. Выход");
+        }
+
+        public static void PrintMenu2ndLevelSinglyLinkedList()
+        {
+            Console.WriteLine("1. Сформировать список");
+            Console.WriteLine("2. Распечатать список");
+            Console.WriteLine("3. Обработать список");
+            Console.WriteLine("4. Удалить список");
+            Console.WriteLine("5. Назад");
+        }
+        /// <summary>
+        /// Ввод числа
+        /// </summary>
+        /// <param name="Text">Сообщение</param>
+        /// <param name="sizes">Ограничение на ввод чисел</param>
+        /// <returns>Число</returns>
+        public static int InputNumber(string Text, params int[] sizes)
+        {
+
+            int number = 0;
+            bool ok = false;
+            do
+            {
+                Console.WriteLine(Text);
+                bool success = Int32.TryParse(Console.ReadLine(), out number);
+                if (success)
+                {
+                    if (sizes.Length == 0)
+                    {
+                        return number;
+                    }
+                    ok = number >= sizes[0] && number <= sizes[1];
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка ввода");
+                }
+
+            } while (!ok);
+            return number;
+        }
+    }
+
     class Program
     {
         class Point
@@ -48,12 +99,12 @@ namespace Lab7
         {
             Random rnd = new Random();
             int info = rnd.Next(0, 11);
-            Console.WriteLine("The element {0} is adding...", info);
+            Console.WriteLine("Элемент {0} добавляется...", info);
             Point beg = MakePoint(info);//создаем первый элемент
             for (int i = 1; i < size; i++)
             {
                 info = rnd.Next(0, 11);
-                Console.WriteLine("The element {0} is adding...", info);
+                Console.WriteLine("Элемент {0} добавляется...", info);
                 //создаем элемент и добавляем в начало списка
                 Point p = MakePoint(info);
                 p.next = beg;
@@ -95,7 +146,7 @@ namespace Lab7
             //проверка наличия элементов в списке
             if (beg == null)
             {
-                Console.WriteLine("The List is empty");
+                Console.WriteLine("Список пуст");
                 return;
             }
             Point p = beg;
@@ -139,13 +190,85 @@ namespace Lab7
             return beg;
         }
 
+        /// <summary>
+        /// Главное меню
+        /// </summary>
+        /// <param name="exit">Выход из меню</param>
+        private static void MakeMenu(bool exit)
+        {
+            do
+            {
+                Dialog.PrintMenu1stLevel();
+                int menuItemLevel1 = Dialog.InputNumber("Введите пункт меню", 1, 4);
+                switch (menuItemLevel1)
+                {
+
+                    case 1: // Однонаправленый список
+                        LinkedListSinglyMenu();
+                        break;
+                    case 2:
+                        
+                        break;
+                    case 3:
+
+                        break;
+                    case 4:
+                        exit = true;
+                        break;
+                    default:
+                        break;
+                }
+
+            } while (!exit);
+        }
+
+        /// <summary>
+        /// Подменю "Однонаправленный список"
+        /// </summary>
+        private static void LinkedListSinglyMenu()
+        {
+            int userAnswer;
+            Point startOfList = null;
+            do
+            {
+                Dialog.PrintMenu2ndLevelSinglyLinkedList();
+                userAnswer = Dialog.InputNumber("Введите пункт меню", 1, 5);
+                switch (userAnswer)
+                {
+                    case 1: //сформировать список
+                        {
+                            startOfList = MakeList(10);
+                            Console.WriteLine("Список сформирован!");
+                            break;
+                        }
+                    case 2: //распечатать список
+                        {
+                            ShowList(startOfList);
+                            break;
+                        }
+                    case 3: //обработать список
+                        {
+                            break;
+                        }
+                    case 4: //удалить список
+                        {
+                            break;
+                        }
+                    case 5:
+                        {
+                            break;
+                        }
+                    default:
+                        break;
+
+                }
+            } while (userAnswer != 5);
+        }
 
         static void Main(string[] args)
         {
-            Point firstElement = MakeListToEnd(10);
-            ShowList(firstElement);
-            firstElement = DelElement(firstElement, 2);
-            ShowList(firstElement);
+            bool exit = false;
+            MakeMenu(exit);
         }
     }
 }
