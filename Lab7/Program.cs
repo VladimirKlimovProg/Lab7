@@ -20,7 +20,16 @@ namespace Lab7
         {
             Console.WriteLine("1. Сформировать список");
             Console.WriteLine("2. Распечатать список");
-            Console.WriteLine("3. Обработать список");
+            Console.WriteLine("3. Удалить из списка первый элемент с четным информационным полем");
+            Console.WriteLine("4. Удалить список");
+            Console.WriteLine("5. Назад");
+        }
+
+        public static void PrintMenu2ndLevelDoublyLinkedList()
+        {
+            Console.WriteLine("1. Сформировать список");
+            Console.WriteLine("2. Распечатать список");
+            Console.WriteLine("3. Добавить в список элемент с заданным номером");
             Console.WriteLine("4. Удалить список");
             Console.WriteLine("5. Назад");
         }
@@ -95,7 +104,7 @@ namespace Lab7
         /// </summary>
         /// <param name="size">Количество элементов списка</param>
         /// <returns>Ссылка на начальный элемент списка</returns>
-        static Point MakeList(int size)
+        static Point MakeSinglyList(int size)
         {
             Random rnd = new Random();
             int info = rnd.Next(0, 11);
@@ -168,7 +177,6 @@ namespace Lab7
         {
             if (beg == null)//пустой список
             {
-                Console.WriteLine("Error! The List is empty");
                 return null;
             }
             if (number == 1)//удаляем первый элемент
@@ -182,12 +190,40 @@ namespace Lab7
                 p = p.next;
             if (p == null)//если элемент не найден
             {
-                Console.WriteLine("Error! The size of List less than Number");
+                Console.WriteLine("Весь список удален");
                 return beg;
             }
             //исключаем элемент из списка
             p.next = p.next.next;
             return beg;
+        }
+
+        /// <summary>
+        /// Поиск первого элемента с четным информационным полем
+        /// </summary>
+        /// <param name="beg">Ссылка на начало списка</param>
+        /// <param name="size">Размер списка</param>
+        /// <returns>Позиция элемента в списке или 0, если элемент не найден</returns>
+        static int FindElement(Point beg, int size)
+        {
+            if (beg == null)//пустой список
+            {
+                Console.WriteLine("Список пуст");
+                return 0;
+            }
+            Point p = beg;
+            for (int i = 1; i < size && p != null; i++)
+            {
+                if (p.data % 2 == 0)
+                {
+                    return i;
+                }
+                else
+                {
+                    p = p.next;
+                }
+            }
+            return 0;
         }
 
         /// <summary>
@@ -206,8 +242,8 @@ namespace Lab7
                     case 1: // Однонаправленый список
                         LinkedListSinglyMenu();
                         break;
-                    case 2:
-                        
+                    case 2://Двунаправленный список
+                        LinkedListDoublyMenu();
                         break;
                     case 3:
 
@@ -237,7 +273,7 @@ namespace Lab7
                 {
                     case 1: //сформировать список
                         {
-                            startOfList = MakeList(10);
+                            startOfList = MakeSinglyList(10);
                             Console.WriteLine("Список сформирован!");
                             break;
                         }
@@ -246,24 +282,74 @@ namespace Lab7
                             ShowList(startOfList);
                             break;
                         }
-                    case 3: //обработать список
+                    case 3: //удалить первый элемент с четным информационным полем
                         {
+                            int element = FindElement(startOfList, 10);
+                            if (element == 0)
+                            {
+                                Console.WriteLine("Элемент не найден");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Элемент найден на позиции {element} и удален");
+                                startOfList = DelElement(startOfList, element);
+                            }
                             break;
                         }
-                    case 4: //удалить список
+                    case 4: //удалить весь список
                         {
-                            break;
-                        }
-                    case 5:
-                        {
+                            for (int i = 1; i <= 10; i++)
+                            {
+                                startOfList = DelElement(startOfList, 1);
+                            }
+                            Console.WriteLine("Список удален");
                             break;
                         }
                     default:
                         break;
-
                 }
             } while (userAnswer != 5);
         }
+
+        /// <summary>
+        /// Подменю "Двунаправленный список"
+        /// </summary>
+        private static void LinkedListDoublyMenu()
+        {
+            int userAnswer;
+            Point startOfList = null;
+            do
+            {
+                Dialog.PrintMenu2ndLevelDoublyLinkedList();
+                userAnswer = Dialog.InputNumber("Введите пункт меню", 1, 5);
+                switch (userAnswer)
+                {
+                    case 1: //сформировать двунаправленный список
+                        {
+
+                            break;
+                        }
+                    case 2: //распечатать двунаправленный список
+                        {
+                            
+                            break;
+                        }
+                    case 3: //добавить в список элемент с заданным номером
+                        {
+     
+                            break;
+                        }
+                    case 4: //удалить весь список
+                        {
+
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            } while (userAnswer != 5);
+        }
+    
 
         static void Main(string[] args)
         {
