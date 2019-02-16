@@ -224,29 +224,6 @@ namespace Lab7
             return beg;
         }
 
-        /// <summary>
-        /// Добавление в конец однонаправленного списка
-        /// </summary>
-        /// <param name="size">Количество элементов списка</param>
-        /// <returns>Ссылка на начальный элемент списка</returns>
-        static Point MakeListToEnd(int size)
-        {
-            Random rnd = new Random();
-            int info = rnd.Next(0, 11);
-            Console.WriteLine("The element {0} is adding...", info);
-            Point beg = MakePoint(info);//первый элемент
-            Point r = beg;//переменная хранит адрес конца списка 
-            for (int i = 1; i < size; i++)
-            {
-                info = rnd.Next(0, 11);
-                Console.WriteLine("The element {0} is adding...", info);
-                //создаем элемент и добавляем в конец списка
-                Point p = MakePoint(info);
-                r.next = p;
-                r = p;
-            }
-            return beg;
-        }
 
         /// <summary>
         /// Отображение однонаправленного списка
@@ -453,13 +430,14 @@ namespace Lab7
             if (p != null)
             {
                 ShowTree(p.left, l + 3);//переход к левому поддереву
-                                        //формирование отступа
-                for (int i = 0; i < l; i++) Console.Write(" ");
+                for (int i = 0; i < l; i++) Console.Write(" ");//формирование отступа
                 Console.WriteLine(p.data);//печать узла
                 ShowTree(p.right, l + 3);//переход к правому поддереву
             }
 
         }
+
+
 
         static PointTree IdealTree(int size, PointTree p)
         {
@@ -472,11 +450,65 @@ namespace Lab7
             }
             nl = size / 2;
             nr = size - nl - 1;
-            int info = Dialog.InputNumber("Введите число от 1 до 10",1,10);
+            int info = Dialog.InputNumber("Введите число от 1 до 100", 1, 100);
             r = new PointTree(info);
             r.left = IdealTree(nl, r.left);
             r.right = IdealTree(nr, r.right);
             return r;
+        }
+
+        static void FindMinElementTree(PointTree p, ref int min)
+        {
+            if (p != null)
+            {
+                FindMinElementTree(p.left, ref min);
+                if (p.data < min)
+                {
+                    min = p.data;
+                }
+                FindMinElementTree(p.right, ref min);
+            }
+        }
+
+        private static void MakeSearchTree(PointTree p, ref PointTree newTree)
+        {
+            if (p != null)
+            {
+                MakeSearchTree(p.left, ref newTree);
+                AddElementInSearchTree(ref newTree, p.data);
+                MakeSearchTree(p.right, ref newTree);
+            }
+        }
+
+        private static void AddElementInSearchTree(ref PointTree newTree, int data)
+        {
+            var newItem = new PointTree(data);
+
+            if (newTree == null)
+            {
+                newTree = newItem;
+                return;
+            }
+
+            var r = newTree;
+
+
+            if (data < r.data)
+            {
+                while (r.left != null)
+                {
+                    r = r.left;
+                }
+                r.left = newItem;
+            }
+            else
+            {
+                while (r.right != null)
+                {
+                    r = r.right;
+                }
+                r.right = newItem;
+            }
         }
 
         /// <summary>
@@ -642,10 +674,30 @@ namespace Lab7
                         }
                     case 3://найти минимальный элемент в дереве
                         {
+                            if (startOfTree == null)
+                            {
+                                Console.WriteLine("Дерево не сформировано");
+                            }
+                            else
+                            {
+                                int currentMin = startOfTree.data;
+                                FindMinElementTree(startOfTree, ref currentMin);
+                                Console.WriteLine($"Минимальный элемент в дереве: {currentMin}");
+                            }
                             break;
                         }
                     case 4://преобразовать идеально сбалансированное дерево в дерево поиска
                         {
+                            if (startOfTree == null)
+                            {
+                                Console.WriteLine("Дерево не сформировано");
+                            }
+                            else
+                            {
+                                PointTree newTree = null;
+                                MakeSearchTree(startOfTree, ref newTree);
+                                ShowTree(newTree,1);
+                            }
                             break;
                         }
                     default:
@@ -654,6 +706,8 @@ namespace Lab7
 
             } while (userAnswer != 5);
         }
+
+
 
         static void Main(string[] args)
         {
